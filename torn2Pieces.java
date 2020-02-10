@@ -49,7 +49,7 @@ public class torn2Pieces {
                 System.out.println("no route found");
             } else {
                 // Remove [ ] and , from the answer
-                System.out.println(path.toString().replace("[", "").replace("]", "").replace(",", ""));
+                System.out.println(path.toString().replaceAll("[\\[\\]\\,]", ""));
             }
         }
 
