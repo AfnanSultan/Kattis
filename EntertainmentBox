@@ -1,0 +1,86 @@
+import java.lang.reflect.Array;
+import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.LinkedList;
+
+class Interval implements Comparable<Interval> {
+
+    int start;
+    int finish;
+
+    public Interval(int xi, int yi) {
+        this.start = xi;
+        this.finish = yi;
+    }
+
+    @Override
+    public int compareTo(Interval job) {
+        return this.finish - job.finish;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + "(" + start + ", " + finish + ")]";
+    }
+
+}
+
+class IntervalScheduling {
+
+    public static void findOptimalJobSchedule(Interval[] intervals, int k) {
+
+        System.out.println("Input jobs: \t" + Arrays.toString(intervals));
+
+        // sort intervals by FINISH TIME
+        Arrays.sort(intervals);
+
+        System.out.println("SORTED Input jobs: \t" + Arrays.toString(intervals));
+
+        LinkedList<Interval> intervalsSelected = new LinkedList<Interval>();
+
+        // Add first interval
+        intervalsSelected.add(intervals[0]);
+        Interval lastIntervalAdded = intervals[0];
+
+        for(int i=1; i<intervals.length; i++) {
+            
+            // Check if interval is compatible (starts after or at the time as the last job finishes
+            if ( intervals[i].start >= lastIntervalAdded.finish ) {
+
+                intervalsSelected.add(intervals[i]);
+                // Update for the jobs recently added
+                lastIntervalAdded = intervals[i];
+
+            }
+        }
+
+        System.out.println("\nSelected " + intervalsSelected.size() + "Intervals: ");
+        for(Interval job: intervalsSelected) {
+            System.out.println(job);
+        }
+
+    }
+}
+
+class EntertainmentBox {
+
+    public static void main(String[] args) {
+	    Scanner input = new Scanner(System.in);
+	    String[] n_k = input.nextLine().split(" ");
+	    int n = Integer.valueOf(n_k[0]);
+	    int k = Integer.valueOf(n_k[1]);
+	    Interval[] intervals = new Interval[n];
+        for(int i=0; i<n; i++) {
+            String[] xi_yi = input.nextLine().split(" ");
+            int xi = Integer.valueOf(xi_yi[0]);
+            int yi = Integer.valueOf(xi_yi[1]);
+            Interval interval = new Interval(xi, yi);
+            intervals[i] = interval;
+        }
+        IntervalScheduling.findOptimalJobSchedule(intervals, k);
+    }
+}
