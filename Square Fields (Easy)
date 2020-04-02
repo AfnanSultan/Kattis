@@ -1,0 +1,63 @@
+import java.util.Scanner;
+import java.lang.Math;
+
+public class squareFieldsEasy {
+
+    private static int k, n, max;
+
+    private static int[] x = new int[20];
+    private static int[] y = new int[20];
+
+    private static int[] minX = new int[20];
+    private static int[] minY = new int[20];
+
+    private static int[] maxX = new int[20];
+    private static int[] maxY = new int[20];
+
+    private static void solve(int next, int marked, int current) {
+        System.out.println(next + " " + marked + " " + current);
+        if ( marked <= k && current <= max ) {
+            if ( next == n ) {
+                max = Math.min(max, current);
+            } else {
+                for(int i=0; i<marked+1; i++) {
+                    int temp1 = minX[i];
+                    int temp2 = minY[i];
+                    int temp3 = maxX[i];
+                    int temp4 = maxY[i];
+                    minX[i] = Math.min(minX[i], x[next]);
+                    minY[i] = Math.min(minY[i], y[next]);
+                    maxX[i] = Math.min(maxX[i], x[next]);
+                    maxY[i] = Math.min(maxY[i], y[next]);
+                    solve(next+1, Math.max(marked, i+1), Math.max(current, Math.max(maxX[i]-minX[i], maxY[i]-minX[i])));
+                    minX[i] = temp1;
+                    minY[i] = temp2;
+                    maxX[i] = temp3;
+                    maxY[i] = temp4;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        Integer t = Integer.valueOf(input.nextLine());
+        for(int i=0; i<t; i++) {
+            n = input.nextInt();
+            k = input.nextInt();
+            for(int j=0; j<n; j++) {
+                x[j] = input.nextInt();
+                y[j] = input.nextInt();
+            }
+            for(int j=0; j<20; j++) {
+                minX[j] = 10000;
+                minY[j] = 10000;
+                maxX[j] = -1;
+                maxY[j] = -1;
+            }
+            max = 10000;
+            solve(0, 0, 0);
+            System.out.println("Case # " + (i+1) + " : " + max);
+        }
+    }
+}
